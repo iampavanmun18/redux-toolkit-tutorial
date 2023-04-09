@@ -1,13 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import cartItems from '../../cartItems'
+
+const url = `https://course-api.com/react-useReducer-cart-project`;
 
 //we can use Redux dev tool for visual representation in devtool
 const initialState = {
-    cartItems: cartItems,
+    cartItems: [],
     amount: 5,
     total: 0,
     isLoading: true,
 }
+
+
+//getCartItems accepts two params 1st is action and 2nd is callback function
+export const getCartItems = createAsyncThunk('cart/getCartItems', () => {
+    return fetch(url).then(res => res.json()).catch((err) => console.log(err));
+})
 
 // createSlice is for creating features e.g counter, cart, calculator
 
@@ -42,13 +50,26 @@ const cartSlice = createSlice({
             })
 
             state.amount = amount
-            state.total= total
+            state.total = total
 
 
 
         }
 
 
+    },
+    extraReducers:{
+        [getCartItems.pending]: (state)=>{
+            state.isLoading = true;
+        },
+        [getCartItems.fulfilled]: (state,action)=>{
+            console.log("action response", action);
+            state.isLoading = false;
+            state.cartItems = action.payload
+        },
+        [getCartItems.rejected]: (state)=>{
+            state.isLoading = false;
+        }
     }
 })
 
