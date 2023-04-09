@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import cartItems from '../../cartItems'
+import axios from 'axios';
 
 const url = `https://course-api.com/react-useReducer-cart-project`;
 
@@ -13,8 +13,20 @@ const initialState = {
 
 
 //getCartItems accepts two params 1st is action and 2nd is callback function
-export const getCartItems = createAsyncThunk('cart/getCartItems', () => {
-    return fetch(url).then(res => res.json()).catch((err) => console.log(err));
+export const getCartItems = createAsyncThunk('cart/getCartItems', async (name, thunkAPI) => {
+    // return fetch(url).then(res => res.json()).catch((err) => console.log(err));
+    try {
+        console.log("Name from App component", name); // App component can pass argument to getCartItems(name) function
+        console.log(thunkAPI);// we can access multiple properties from thunkAPI like state of app,dispatch an action, intercept an action.
+        const resp = await axios(url);
+        console.log(resp);
+
+    } catch (error) {
+        return thunkAPI.rejectWithValue("Something went wrong")
+    }
+
+
+
 })
 
 // createSlice is for creating features e.g counter, cart, calculator
@@ -58,16 +70,17 @@ const cartSlice = createSlice({
 
 
     },
-    extraReducers:{
-        [getCartItems.pending]: (state)=>{
+    extraReducers: {
+        [getCartItems.pending]: (state) => {
             state.isLoading = true;
         },
-        [getCartItems.fulfilled]: (state,action)=>{
+        [getCartItems.fulfilled]: (state, action) => {
             console.log("action response", action);
             state.isLoading = false;
             state.cartItems = action.payload
         },
-        [getCartItems.rejected]: (state)=>{
+        [getCartItems.rejected]: (state,action) => {
+            console.log(action);
             state.isLoading = false;
         }
     }
