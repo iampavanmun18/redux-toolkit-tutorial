@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { calculateCart, getCartItems } from "./features/cart/cartSlice";
 import Modal from "./components/Modal";
+import LoadingSpinner from "./components/LoadingSpinner";
 function App() {
   const { cartItems, isLoading } = useSelector((store) => store.cart)
   const { isOpen } = useSelector((store) => store.modal)
@@ -21,9 +22,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="loading">
-        <h1>Loading...</h1>
-      </div>
+      <LoadingSpinner />
     )
   }
 
