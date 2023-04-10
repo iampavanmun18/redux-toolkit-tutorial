@@ -17,9 +17,9 @@ export const getCartItems = createAsyncThunk('cart/getCartItems', async (name, t
     // return fetch(url).then(res => res.json()).catch((err) => console.log(err));
     try {
         console.log("Name from App component", name); // App component can pass argument to getCartItems(name) function
-        console.log(thunkAPI);// we can access multiple properties from thunkAPI like state of app,dispatch an action, intercept an action.
+        //console.log(thunkAPI); we can access multiple properties from thunkAPI like state of app,dispatch an action, intercept an action.
         const resp = await axios(url);
-        console.log(resp);
+        return resp.data
 
     } catch (error) {
         return thunkAPI.rejectWithValue("Something went wrong")
@@ -79,7 +79,7 @@ const cartSlice = createSlice({
             state.isLoading = false;
             state.cartItems = action.payload
         },
-        [getCartItems.rejected]: (state,action) => {
+        [getCartItems.rejected]: (state, action) => {
             console.log(action);
             state.isLoading = false;
         }
