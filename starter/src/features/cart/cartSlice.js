@@ -70,6 +70,8 @@ const cartSlice = createSlice({
 
 
     },
+
+    //ExtraReducers will give us access to 3 states of promise given by api(getCartItems i.e pending, fulfilled, rejected)
     extraReducers: {
         [getCartItems.pending]: (state) => {
             state.isLoading = true;
