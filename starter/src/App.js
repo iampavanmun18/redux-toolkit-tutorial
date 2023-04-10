@@ -6,7 +6,7 @@ import { calculateCart, getCartItems } from "./features/cart/cartSlice";
 import Modal from "./components/Modal";
 import LoadingSpinner from "./components/LoadingSpinner";
 function App() {
-  const { cartItems, isLoading } = useSelector((store) => store.cart)
+  const { isLoading } = useSelector((store) => store.cart)
   const { isOpen } = useSelector((store) => store.modal)
   const dispatch = useDispatch();
 
@@ -14,11 +14,11 @@ function App() {
 
   useEffect(() => {
     dispatch(calculateCart())
-  }, [cartItems])
+  })
 
   useEffect(() => {
     dispatch(getCartItems("Pavan"))
-  }, [])
+  })
 
   if (isLoading) {
     return (
