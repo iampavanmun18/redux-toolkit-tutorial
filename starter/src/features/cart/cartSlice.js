@@ -1,6 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
-
 const url = `https://course-api.com/react-useReducer-cart-project`;
 
 //we can use Redux dev tool for visual representation in devtool
@@ -13,20 +11,17 @@ const initialState = {
 
 
 //getCartItems accepts two params 1st is action and 2nd is callback function
-export const getCartItems = createAsyncThunk('cart/getCartItems', async (name, thunkAPI) => {
-    // return fetch(url).then(res => res.json()).catch((err) => console.log(err));
-    try {
-        console.log("Name from App component", name); // App component can pass argument to getCartItems(name) function
-        //console.log(thunkAPI); we can access multiple properties from thunkAPI like state of app,dispatch an action, intercept an action.
-        const resp = await axios(url);
-        return resp.data
+export const getCartItems = createAsyncThunk('cart/getCartItems', async (thunkAPI) => {
+    return await fetch(url).then(res => res.json()).catch((err) => console.log(err));
+    //try {
+    //console.log("Name from App component", name); // App component can pass argument to getCartItems(name) function
+    //console.log(thunkAPI); we can access multiple properties from thunkAPI like state of app,dispatch an action, intercept an action.
+    //const resp = await axios(url);
+    //return resp.data
 
-    } catch (error) {
-        return thunkAPI.rejectWithValue("Something went wrong")
-    }
-
-
-
+    //} catch (error) {
+    //return thunkAPI.rejectWithValue("Something went wrong")
+    //}
 })
 
 // createSlice is for creating features e.g counter, cart, calculator
@@ -70,8 +65,6 @@ const cartSlice = createSlice({
 
 
     },
-
-    //ExtraReducers will give us access to 3 states of promise given by api(getCartItems i.e pending, fulfilled, rejected)
     extraReducers: {
         [getCartItems.pending]: (state) => {
             state.isLoading = true;
@@ -81,8 +74,7 @@ const cartSlice = createSlice({
             state.isLoading = false;
             state.cartItems = action.payload
         },
-        [getCartItems.rejected]: (state, action) => {
-            console.log(action);
+        [getCartItems.rejected]: (state) => {
             state.isLoading = false;
         }
     }
